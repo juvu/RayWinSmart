@@ -12,7 +12,8 @@ input:
     , Define_Increase_LatestPosition_Win_Point(0)       // 最後一碼賺多少點才可以加碼
     , String_Override_StopLoss_FixPoint("")
     , Define_Override_StopLoss_FixPoint(0)              // 自定最大損失點數
-    , Define_Order_Limit_OffsetPoint(5)                 // 限價單讓價點數
+    , String_Order_Limit_OffsetPoint("")
+    , Define_Order_Limit_OffsetPoint(0)                 // 限價單讓價點數
     ;
 var:
     Define_Broker(0)
