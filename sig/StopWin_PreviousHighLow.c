@@ -18,15 +18,18 @@ var:
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
 Define_Broker = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 1);
-Define_StopWin_PreviousHighLow_K_Number = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 6);
-Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
 //"
-
 RaySmart_ReturnCurrentPositionAvgEntryPrice(
     Define_Broker
     , Value_CurrentPosition
     , Value_AvgEntryPrice
 );
+
+if( Value_CurrentPosition <> 0 ) then begin
+Define_StopWin_PreviousHighLow_K_Number = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 6);
+Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
+//"
+end ;
 
 RaySmart_ReturnPreviousHighLow(
     Define_StopWin_PreviousHighLow_K_Number

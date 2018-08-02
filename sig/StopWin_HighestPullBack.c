@@ -16,8 +16,6 @@ var:
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
 Define_Broker = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 1);
-Define_StopWin_HighestPullBackPoint = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 5);
-Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
 //"
 
 RaySmart_ReturnCurrentPositionAvgEntryPrice(
@@ -25,6 +23,12 @@ RaySmart_ReturnCurrentPositionAvgEntryPrice(
     , Value_CurrentPosition
     , Value_AvgEntryPrice
 );
+
+if( Value_CurrentPosition <> 0 ) then begin
+Define_StopWin_HighestPullBackPoint = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 5);
+Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
+//"
+end ;
 
 if( Value_CurrentPosition <> 0 ) then begin
     RaySmart_ReturnStopWinHighestPullBackPrice(

@@ -19,9 +19,6 @@ var:
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
 Define_Broker = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 1);
-Define_StopWin_PivotHighLow_LeftStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 7);
-Define_StopWin_PivotHighLow_RightStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 8);
-Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
 //"
 
 RaySmart_ReturnCurrentPositionAvgEntryPrice(
@@ -29,6 +26,13 @@ RaySmart_ReturnCurrentPositionAvgEntryPrice(
     , Value_CurrentPosition
     , Value_AvgEntryPrice
 );
+
+if( Value_CurrentPosition <> 0 ) then begin
+Define_StopWin_PivotHighLow_LeftStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 7);
+Define_StopWin_PivotHighLow_RightStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 8);
+Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
+//"
+end ;
 
 RaySmart_ReturnPivotHighLowPrice(
     High , Low

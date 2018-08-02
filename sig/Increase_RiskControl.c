@@ -47,6 +47,15 @@ var:
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
 Define_Broker = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 1);
+//"
+
+RaySmart_ReturnCurrentPositionAvgEntryPrice(
+    Define_Broker
+    , Value_CurrentPosition
+    , Value_AvgEntryPrice
+);
+
+if( Value_CurrentPosition <> 0 ) then begin
 Define_TradeMode = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 2);
 Define_Total_Money = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 3);
 Define_MaxLossPersent = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 4);
@@ -56,12 +65,7 @@ Define_StopWin_PivotHighLow_LeftStrength = _readfile("G:\_External_Txt\RayWinSma
 Define_StopWin_PivotHighLow_RightStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 8);
 Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
 //"
-
-RaySmart_ReturnCurrentPositionAvgEntryPrice(
-    Define_Broker
-    , Value_CurrentPosition
-    , Value_AvgEntryPrice
-);
+end ;
 
 RaySmart_ReturnIncreaseAvgEntryPrice(
     Value_CurrentPosition

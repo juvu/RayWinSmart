@@ -18,9 +18,6 @@ var:
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
 Define_Broker = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 1);
-Define_TradeMode = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 2);
-Define_Total_Money = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 3);
-Define_MaxLossPersent = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 4);
 //"
 
 RaySmart_ReturnCurrentPositionAvgEntryPrice(
@@ -28,6 +25,13 @@ RaySmart_ReturnCurrentPositionAvgEntryPrice(
     , Value_CurrentPosition
     , Value_AvgEntryPrice
 );
+
+if( Value_CurrentPosition <> 0 ) then begin
+Define_TradeMode = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 2);
+Define_Total_Money = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 3);
+Define_MaxLossPersent = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 4);
+//"
+end ;
 
 RaySmart_ReturnMaxLossPersentToPoint(
     Define_TradeMode
