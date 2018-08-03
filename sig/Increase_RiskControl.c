@@ -8,12 +8,14 @@ input:
     , Define_Increase_Position(1)                       // 加碼口數
     , String_Increase_ONOFF_StopWinBestPrice_Over_LatestOrder("")
     , Define_Increase_ONOFF_StopWinBestPrice_Over_LatestOrder(0) // 停利線越過最後一碼
-    , String_Increase_LatestPosition_Win_Point("")       // 最後一碼賺多少點才可以加碼
+    , String_Increase_LatestPosition_Win_Point("")
     , Define_Increase_LatestPosition_Win_Point(0)       // 最後一碼賺多少點才可以加碼
     , String_Override_StopLoss_FixPoint("")
     , Define_Override_StopLoss_FixPoint(0)              // 自定最大損失點數
     , String_Order_Limit_OffsetPoint("")
     , Define_Order_Limit_OffsetPoint(0)                 // 限價單讓價點數
+    , String_Increase_LatestPosition_WinOver_StopLoss_Price("")
+    , Define_Increase_LatestPosition_WinOver_StopLoss_Price(0)  // 最大損失越過最後一碼多少點就加碼
     ;
 var:
     Define_Broker(0)
@@ -155,6 +157,7 @@ condition2 = false ;
 condition3 = false ;
 condition4 = false ;
 condition5 = false ;
+condition6 = false ;
 
 // 加碼不可超過最大口數
 condition1 = absvalue(Value_CurrentPosition) < Define_MaxPosition ;
@@ -167,19 +170,27 @@ if( Define_Override_StopLoss_FixPoint = 0 ) then begin
     if( Value_CurrentPosition > 0 ) then begin
     condition3 = ((Value_StopWin_Best_Price - Value_IncreaseAvgEntryPrice) * (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position)))
                 > ((-1) * Value_StopLoss_Max_Point) ;
+    condition6 = (Value_IncreaseAvgEntryPrice - (Value_StopLoss_Max_Point / (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position))))
+                > PosTradeEntryPrice(0, CurrentEntries - 1) + Define_Increase_LatestPosition_WinOver_StopLoss_Price ;
     end ;
     if( Value_CurrentPosition < 0 ) then begin
     condition3 = ((Value_IncreaseAvgEntryPrice - Value_StopWin_Best_Price) * (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position)))
                 > ((-1) * Value_StopLoss_Max_Point) ;
+    condition6 = (Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position))))
+                < PosTradeEntryPrice(0, CurrentEntries - 1) - Define_Increase_LatestPosition_WinOver_StopLoss_Price ;
     end ;
 end else if( Define_Override_StopLoss_FixPoint <> 0 ) then begin
     if( Value_CurrentPosition > 0 ) then begin
     condition3 = ((Value_StopWin_Best_Price - Value_IncreaseAvgEntryPrice) * (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position)))
                 > (Define_Override_StopLoss_FixPoint) ;
+    condition6 = (Value_IncreaseAvgEntryPrice - (Define_Override_StopLoss_FixPoint / (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position))))
+                > PosTradeEntryPrice(0, CurrentEntries - 1) + Define_Increase_LatestPosition_WinOver_StopLoss_Price ;
     end ;
     if( Value_CurrentPosition < 0 ) then begin
     condition3 = ((Value_IncreaseAvgEntryPrice - Value_StopWin_Best_Price) * (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position)))
                 > (Define_Override_StopLoss_FixPoint) ;
+    condition6 = (Value_IncreaseAvgEntryPrice + (Define_Override_StopLoss_FixPoint / (absvalue(Value_CurrentPosition) + absvalue(Define_Increase_Position))))
+                < PosTradeEntryPrice(0, CurrentEntries - 1) - Define_Increase_LatestPosition_WinOver_StopLoss_Price ;
     end ;
 end ;
 
@@ -224,6 +235,24 @@ if condition1 and condition2 and condition3 and condition4 and condition5 then b
 end ;
 
 end ; //if( Value_Initial_StopWin_Best_Price <> Value_StopWin_Best_Price )
+
+// 只要最大損失出場線越過最後一碼就加碼
+if condition1 and condition2 and condition6 and condition4 and condition5 then begin
+    if( Value_CurrentPosition > 0 ) then begin
+        if( Define_Order_Limit_OffsetPoint = 0 ) then begin
+            buy absvalue(Define_Increase_Position) contract next bar market ;
+        end else begin
+            buy absvalue(Define_Increase_Position) contract next bar IntPortion(close + Define_Order_Limit_OffsetPoint) limit ;
+        end ;
+    end ; // if( Value_CurrentPosition > 0 )
+    if( Value_CurrentPosition < 0 ) then begin
+        if( Define_Order_Limit_OffsetPoint = 0 ) then begin
+            sellshort absvalue(Define_Increase_Position) contract next bar market ;
+        end else begin
+            sellshort absvalue(Define_Increase_Position) contract next bar IntPortion(close - Define_Order_Limit_OffsetPoint) limit ;
+        end ;
+    end ; // if( Value_CurrentPosition < 0 )
+end ;
 
 // Strategy End
 end ;
