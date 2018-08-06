@@ -1,7 +1,7 @@
 inputs:
 	ATRLength( 10 ),
 	AlertLength( 14 ),
-	ATRScale( 1.1 ) ;
+	ATRScale( 1.2 ) ;
 
 variables:
 	var0( 0 ) ;
@@ -22,5 +22,5 @@ var0 = AvgTrueRange( ATRLength ) ;
 //end;
 //
 
-plot1( open + var0[1] * ATRScale ,"" , WEBColor("CadetBlue") );
-plot2( open - var0[1] * ATRScale , "" , WEBColor("CadetBlue") );
+plot1( Average((H[1] + L[1] + C[1])/3 , ATRLength) + var0[1] * ATRScale ,"" , WEBColor("CadetBlue") );
+plot2( Average((H[1] + L[1] + C[1])/3 , ATRLength) - var0[1] * ATRScale , "" , WEBColor("CadetBlue") );
