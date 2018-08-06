@@ -50,10 +50,10 @@ end ;
 
 if( Value_StopWin_Active_Begin = 1 ) then begin
     if( Value_CurrentPosition > 0 ) then begin
-        sell next bar IntPortion(Value_AvgEntryPrice + (Define_StopWin_Protect_Point * absvalue(Value_CurrentPosition))) stop ;
+        sell next bar IntPortion(Value_AvgEntryPrice + (Define_StopWin_Protect_Point)) stop ;
     end ;
     if( Value_CurrentPosition < 0 ) then begin
-        buytocover next bar IntPortion(Value_AvgEntryPrice - (Define_StopWin_Protect_Point * absvalue(Value_CurrentPosition))) stop ;
+        buytocover next bar IntPortion(Value_AvgEntryPrice - (Define_StopWin_Protect_Point)) stop ;
     end ;
 end ;
 
