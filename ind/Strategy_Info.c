@@ -22,6 +22,7 @@ input :
     , String_StopWin_Profit("String_StopWin_Profit")                                // 停利線平倉損益
     , String_StopWin_PivotHighLowPrice("String_StopWin_PivotHighLowPrice")          // 轉折高低停利出場
     , String_Daily_HighLow_Interval("String_Daily_HighLow_Interval")                // 當日高低差
+    , String_Increase_Then_StopLoss_FixPoint_Price("String_Increase_Then_StopLoss_FixPoint_Price")  // 加碼後最大損失停損
 	;
 
 var :
@@ -42,6 +43,7 @@ var :
  	, Value_OpenPositionProfit(0)
 	, Value_IncreaseAvgEntryPrice(0)
     , Value_StopLoss_FixPoint_Price(0)
+    , Value_Increase_Then_StopLoss_FixPoint_Price(0)
     , Value_StopWin_HighestPullBackPrice(0)
     , Value_StopWin_PreviousHighPrice(0)
     , Value_StopWin_PreviousLowPrice(0)
@@ -60,6 +62,7 @@ var :
 	, Color_StopWin_HighestPullBackPrice("SteelBlue")
 	, Color_StopWin_PreviousHighLow("DodgerBlue")
 	, Color_StopWin_PivotHighLowPrice("CadetBlue")
+	, Color_Increase_Then_StopLoss_FixPoint_Price("DeepSkyBlue")
 
     , Dynamic_TextDrawHorizPl_Right(0)
     , Dynamic_TextDrawHorizPl_Left(1)
@@ -166,6 +169,11 @@ RaySmart_ReturnStopWinProfit(
     , Value_Max_StopWin_Point
 );
 
+// 計算加碼後最大損失出場價
+if(Value_CurrentPosition > 0) then
+    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice - (Value_StopLoss_Max_Point / (Value_CurrentPosition + 1)) ; // 預設加碼口數 1
+if(Value_CurrentPosition < 0) then
+    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / (Value_CurrentPosition + 1)) ; // 預設加碼口數 1
 //-------------------------------------------------------------------------------------------------------------------
 
 // Text Caculate : Value_OpenPositionProfit
@@ -394,5 +402,24 @@ Text_SetStyle (value23, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Cen
 Text_SetSize(value23, Define_TextDrawSize);
 Text_SetColor(value23, WEBColor(Color_FixInfo));
 Text_SetLocation_Bn (value23, currentbar + RaySmart_ReturnTextDrawPositionX(98), RaySmart_ReturnTextDrawPositionY(95)) ;
+
+// Text Draw : Value_Increase_Then_StopLoss_FixPoint_Price
+once begin
+    value24 = Text_New (D, T, Value_Increase_Then_StopLoss_FixPoint_Price, "");
+end ;
+Text_SetString(value24, String_Increase_Then_StopLoss_FixPoint_Price + "=" + numtostr(Value_Increase_Then_StopLoss_FixPoint_Price,0));
+Text_SetStyle (value24, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Above);
+Text_SetSize(value24, Define_TextDrawSize);
+Text_SetColor(value24, WEBColor(Color_Increase_Then_StopLoss_FixPoint_Price));
+Text_SetLocation_Bn (value24, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_Increase_Then_StopLoss_FixPoint_Price) ;
+if( Value_CurrentPosition <> 0 and Value_Increase_Then_StopLoss_FixPoint_Price > 0 ) then begin
+    plot7(Value_Increase_Then_StopLoss_FixPoint_Price,"Value_Increase_Then_StopLoss_FixPoint_Price",WEBColor(Color_Increase_Then_StopLoss_FixPoint_Price));
+    once begin
+        value25 = TL_New_BN (currentbar, Value_Increase_Then_StopLoss_FixPoint_Price, currentbar, Value_Increase_Then_StopLoss_FixPoint_Price);
+        TL_SetColor(value25, WEBColor(Color_Increase_Then_StopLoss_FixPoint_Price));
+    end ;
+    TL_SetBegin_bn(value25, currentbar, Value_Increase_Then_StopLoss_FixPoint_Price);
+    TL_SetEnd_bn(value25, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_Increase_Then_StopLoss_FixPoint_Price);
+end ;
 
 //-------------------------------------------------------------------------------------------------------------------
