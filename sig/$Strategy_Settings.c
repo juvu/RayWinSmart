@@ -21,12 +21,12 @@ input:
     , Define_StopWin_ProfitLoss_Active_Point(0)         // 獲利回吐啟動點數
     , String_StopWin_ProfitLoss_Percentage("")
     , Define_StopWin_ProfitLoss_Percentage(0)           // 獲利回吐%
-    , String_StopWin_TickOffset("")
-    , Define_StopWin_TickOffset(0)                      // 停利線讓價點數
     , String_SellThenBuyBack_After_K_Number("")
     , Define_SellThenBuyBack_After_K_Number(0)          // 經過K棒數後，錯賣買回
     , String_SellThenBuyBuyBack_Position("")
     , Define_SellThenBuyBuyBack_Position(0)             // 錯賣買回進場口數
+    , String_StopWin_TickOffset("")
+    , Define_StopWin_TickOffset(0)                      // 停利線讓價點數
     ;
 var:
     InfoMap(MapSN.New)
