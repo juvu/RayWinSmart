@@ -23,6 +23,8 @@ input :
     , String_StopWin_PivotHighLowPrice("String_StopWin_PivotHighLowPrice")          // 轉折高低停利出場
     , String_Daily_HighLow_Interval("String_Daily_HighLow_Interval")                // 當日高低差
     , String_Increase_Then_StopLoss_FixPoint_Price("String_Increase_Then_StopLoss_FixPoint_Price")  // 加碼後最大損失停損
+    , String_StopWin_ProfitLossPrice("String_StopWin_ProfitLossPrice")              // 獲利回吐停利出場
+    , String_StopWin_Protect_Active_Point("String_StopWin_Protect_Active_Point")    // 保本啟動中
 	;
 
 var :
@@ -36,7 +38,10 @@ var :
     , Define_StopWin_PivotHighLow_LeftStrength(0)
     , Define_StopWin_PivotHighLow_RightStrength(0)
     , Define_StopWin_TickOffset(0)
-	, Value_TextDrawHorizPl(0)
+    , Define_StopWin_ProfitLoss_Active_Point(0)
+    , Define_StopWin_ProfitLoss_Percentage(0)
+	, Define_StopWin_Protect_Active_Point(0)
+    , Value_TextDrawHorizPl(0)
 	, Value_TextDrawVertPl(2)
 	, Value_CurrentPosition(0)
 	, Value_AvgEntryPrice(0)
@@ -51,6 +56,9 @@ var :
     , Value_Max_StopWin_Point(0)
     , Value_StopWin_PivotHighPrice(0)
     , Value_StopWin_PivotLowPrice(0)
+    , Value_StopWin_ProfitLoss_Active_Begin(0)
+    , Value_StopWin_ProfitLoss_Highest_OpenPositionProfit(0)
+    , Value_StopWin_ProfitLossPrice(0)
 
     , Value_Daily_BarNumber(0)
     , Value_Daily_HighLow_Interval(0)
@@ -63,6 +71,7 @@ var :
 	, Color_StopWin_PreviousHighLow("DodgerBlue")
 	, Color_StopWin_PivotHighLowPrice("CadetBlue")
 	, Color_Increase_Then_StopLoss_FixPoint_Price("DeepSkyBlue")
+	, Color_StopWin_ProfitLossPrice("LightBlue")
 
     , Dynamic_TextDrawHorizPl_Right(0)
     , Dynamic_TextDrawHorizPl_Left(1)
@@ -92,6 +101,9 @@ Define_StopWin_PreviousHighLow_K_Number = _readfile("G:\_External_Txt\RayWinSmar
 Define_StopWin_PivotHighLow_LeftStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 7);
 Define_StopWin_PivotHighLow_RightStrength = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 8);
 Define_StopWin_TickOffset = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 9);
+Define_StopWin_ProfitLoss_Active_Point = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 10);
+Define_StopWin_ProfitLoss_Percentage = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 11);
+Define_StopWin_Protect_Active_Point = _readfile("G:\_External_Txt\RayWinSmart\" + PathLocation + "\" + FileName + ".txt" , 12);
 //"
 end ;
 
@@ -173,7 +185,32 @@ RaySmart_ReturnStopWinProfit(
 if(Value_CurrentPosition > 0) then
     Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice - (Value_StopLoss_Max_Point / (Value_CurrentPosition + 1)) ; // 預設加碼口數 1
 if(Value_CurrentPosition < 0) then
-    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / (Value_CurrentPosition + 1)) ; // 預設加碼口數 1
+    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / (Value_CurrentPosition - 1)) ; // 預設加碼口數 1
+
+// 計算獲利回吐停利出場價
+if( Value_CurrentPosition > 0 ) then begin
+RaySmart_ReturnStopWinProfitLoss(
+    Define_StopWin_ProfitLoss_Active_Point
+    , Value_CurrentPosition
+    , Value_AvgEntryPrice
+    , Value_StopWin_ProfitLoss_Active_Begin
+    , Value_StopWin_ProfitLoss_Highest_OpenPositionProfit
+);
+Value_StopWin_ProfitLossPrice = 
+    Value_AvgEntryPrice + (((Value_StopWin_ProfitLoss_Highest_OpenPositionProfit * (100 - Define_StopWin_ProfitLoss_Percentage)) / 100) / Value_CurrentPosition) ;
+end ; // if( Value_CurrentPosition <> 0 )
+if( Value_CurrentPosition < 0 ) then begin
+RaySmart_ReturnStopWinProfitLoss(
+    Define_StopWin_ProfitLoss_Active_Point
+    , Value_CurrentPosition
+    , Value_AvgEntryPrice
+    , Value_StopWin_ProfitLoss_Active_Begin
+    , Value_StopWin_ProfitLoss_Highest_OpenPositionProfit
+);
+Value_StopWin_ProfitLossPrice = 
+    Value_AvgEntryPrice - (((Value_StopWin_ProfitLoss_Highest_OpenPositionProfit * (100 - Define_StopWin_ProfitLoss_Percentage)) / 100) / absvalue(Value_CurrentPosition)) ;
+end ; // if( Value_CurrentPosition < 0 )
+
 //-------------------------------------------------------------------------------------------------------------------
 
 // Text Caculate : Value_OpenPositionProfit
@@ -422,4 +459,36 @@ if( Value_CurrentPosition <> 0 and Value_Increase_Then_StopLoss_FixPoint_Price >
     TL_SetEnd_bn(value25, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_Increase_Then_StopLoss_FixPoint_Price);
 end ;
 
+// Text Draw : Value_StopWin_ProfitLossPrice
+if( Value_StopWin_ProfitLoss_Active_Begin = 1 ) then begin
+    once begin
+        value24 = Text_New (D, T, Value_StopWin_ProfitLossPrice, "");
+    end ;
+    Text_SetString(value24, String_StopWin_ProfitLossPrice + "=" + numtostr(Value_StopWin_ProfitLossPrice,0));
+    Text_SetStyle (value24, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Above);
+    Text_SetSize(value24, Define_TextDrawSize);
+    Text_SetColor(value24, WEBColor(Color_StopWin_ProfitLossPrice));
+    Text_SetLocation_Bn (value24, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice) ;
+    if( Value_CurrentPosition <> 0 and Value_StopWin_ProfitLossPrice > 0 ) then begin
+        plot7(Value_StopWin_ProfitLossPrice,"Value_StopWin_ProfitLossPrice",WEBColor(Color_StopWin_ProfitLossPrice));
+        once begin
+            value25 = TL_New_BN (currentbar, Value_StopWin_ProfitLossPrice, currentbar, Value_StopWin_ProfitLossPrice);
+            TL_SetColor(value25, WEBColor(Color_StopWin_ProfitLossPrice));
+        end ;
+        TL_SetBegin_bn(value25, currentbar, Value_StopWin_ProfitLossPrice);
+        TL_SetEnd_bn(value25, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice);
+    end ;
+end ; // if( Value_StopWin_ProfitLoss_Active_Begin = 1 )
+
+// Text Caculate : Value_StopWin_Active_Begin
+if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point ) then begin
+once begin
+    value26 = Text_New (D, T, C, "");
+end ;
+Text_SetString(value26, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String_StopWin_Protect_Active_Point);
+Text_SetStyle (value26, Dynamic_TextDrawHorizPl_Right, Dynamic_TextDrawVertPl_Center);
+Text_SetSize(value26, Define_TextDrawSize);
+Text_SetColor(value26, WEBColor(Color_FixInfo));
+Text_SetLocation_Bn (value26, currentbar + RaySmart_ReturnTextDrawPositionX(98), RaySmart_ReturnTextDrawPositionY(95)) ;
+end ; // if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point )
 //-------------------------------------------------------------------------------------------------------------------
