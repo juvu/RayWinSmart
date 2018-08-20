@@ -185,7 +185,7 @@ RaySmart_ReturnStopWinProfit(
 if(Value_CurrentPosition > 0) then
     Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice - (Value_StopLoss_Max_Point / (Value_CurrentPosition + 1)) ; // 預設加碼口數 1
 if(Value_CurrentPosition < 0) then
-    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / (Value_CurrentPosition - 1)) ; // 預設加碼口數 1
+    Value_Increase_Then_StopLoss_FixPoint_Price = Value_IncreaseAvgEntryPrice + (Value_StopLoss_Max_Point / absvalue(Value_CurrentPosition - 1)) ; // 預設加碼口數 1
 
 // 計算獲利回吐停利出場價
 if( Value_CurrentPosition > 0 ) then begin
