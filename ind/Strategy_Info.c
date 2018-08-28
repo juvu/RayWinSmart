@@ -462,33 +462,33 @@ end ;
 // Text Draw : Value_StopWin_ProfitLossPrice
 if( Value_StopWin_ProfitLoss_Active_Begin = 1 ) then begin
     once begin
-        value24 = Text_New (D, T, Value_StopWin_ProfitLossPrice, "");
+        value26 = Text_New (D, T, Value_StopWin_ProfitLossPrice, "");
     end ;
-    Text_SetString(value24, String_StopWin_ProfitLossPrice + "=" + numtostr(Value_StopWin_ProfitLossPrice,0));
-    Text_SetStyle (value24, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Above);
-    Text_SetSize(value24, Define_TextDrawSize);
-    Text_SetColor(value24, WEBColor(Color_StopWin_ProfitLossPrice));
-    Text_SetLocation_Bn (value24, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice) ;
+    Text_SetString(value26, String_StopWin_ProfitLossPrice + "=" + numtostr(Value_StopWin_ProfitLossPrice,0));
+    Text_SetStyle (value26, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Above);
+    Text_SetSize(value26, Define_TextDrawSize);
+    Text_SetColor(value26, WEBColor(Color_StopWin_ProfitLossPrice));
+    Text_SetLocation_Bn (value26, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice) ;
     if( Value_CurrentPosition <> 0 and Value_StopWin_ProfitLossPrice > 0 ) then begin
-        plot7(Value_StopWin_ProfitLossPrice,"Value_StopWin_ProfitLossPrice",WEBColor(Color_StopWin_ProfitLossPrice));
+        plot8(Value_StopWin_ProfitLossPrice,"Value_StopWin_ProfitLossPrice",WEBColor(Color_StopWin_ProfitLossPrice));
         once begin
-            value25 = TL_New_BN (currentbar, Value_StopWin_ProfitLossPrice, currentbar, Value_StopWin_ProfitLossPrice);
-            TL_SetColor(value25, WEBColor(Color_StopWin_ProfitLossPrice));
+            value27 = TL_New_BN (currentbar, Value_StopWin_ProfitLossPrice, currentbar, Value_StopWin_ProfitLossPrice);
+            TL_SetColor(value27, WEBColor(Color_StopWin_ProfitLossPrice));
         end ;
-        TL_SetBegin_bn(value25, currentbar, Value_StopWin_ProfitLossPrice);
-        TL_SetEnd_bn(value25, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice);
+        TL_SetBegin_bn(value27, currentbar, Value_StopWin_ProfitLossPrice);
+        TL_SetEnd_bn(value27, currentbar + RaySmart_ReturnTextDrawPositionX(50), Value_StopWin_ProfitLossPrice);
     end ;
 end ; // if( Value_StopWin_ProfitLoss_Active_Begin = 1 )
 
 // Text Caculate : Value_StopWin_Active_Begin
 if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point ) then begin
 once begin
-    value26 = Text_New (D, T, C, "");
+    value28 = Text_New (D, T, C, "");
 end ;
-Text_SetString(value26, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String_StopWin_Protect_Active_Point);
-Text_SetStyle (value26, Dynamic_TextDrawHorizPl_Right, Dynamic_TextDrawVertPl_Center);
-Text_SetSize(value26, Define_TextDrawSize);
-Text_SetColor(value26, WEBColor(Color_FixInfo));
-Text_SetLocation_Bn (value26, currentbar + RaySmart_ReturnTextDrawPositionX(98), RaySmart_ReturnTextDrawPositionY(95)) ;
+Text_SetString(value28, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String_StopWin_Protect_Active_Point);
+Text_SetStyle (value28, Dynamic_TextDrawHorizPl_Right, Dynamic_TextDrawVertPl_Center);
+Text_SetSize(value28, Define_TextDrawSize);
+Text_SetColor(value28, WEBColor(Color_FixInfo));
+Text_SetLocation_Bn (value28, currentbar + RaySmart_ReturnTextDrawPositionX(98), RaySmart_ReturnTextDrawPositionY(95)) ;
 end ; // if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point )
 //-------------------------------------------------------------------------------------------------------------------
