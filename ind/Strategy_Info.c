@@ -486,7 +486,7 @@ once begin
     value28 = Text_New (D, T, C, "");
 end ;
 Text_SetString(value28, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n" + String_StopWin_Protect_Active_Point);
-Text_SetStyle (value28, Dynamic_TextDrawHorizPl_Right, Dynamic_TextDrawVertPl_Center);
+Text_SetStyle (value28, Dynamic_TextDrawHorizPl_Left, Dynamic_TextDrawVertPl_Center);
 Text_SetSize(value28, Define_TextDrawSize);
 Text_SetColor(value28, WEBColor(Color_FixInfo));
 Text_SetLocation_Bn (value28, currentbar + RaySmart_ReturnTextDrawPositionX(98), RaySmart_ReturnTextDrawPositionY(95)) ;
