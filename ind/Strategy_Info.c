@@ -80,7 +80,6 @@ var :
     , Dynamic_TextDrawVertPl_Above(1)
     , Dynamic_TextDrawVertPl_Center(2)
     , Value_BeginDate(0) , Value_BeginTime(0)
-    , i_OpenPositionProfit(0)
 	;
 //-------------------------------------------------------------------------------------------------------------------
 // Read From File
@@ -212,15 +211,13 @@ Value_StopWin_ProfitLossPrice =
     Value_AvgEntryPrice - (((Value_StopWin_ProfitLoss_Highest_OpenPositionProfit * (100 - Define_StopWin_ProfitLoss_Percentage)) / 100) / absvalue(Value_CurrentPosition)) ;
 end ; // if( Value_CurrentPosition < 0 )
 
-// 計算當下未平倉損益
-if( Value_CurrentPosition <> Value_CurrentPosition[1] ) then begin
-    i_OpenPositionProfit = i_OpenEquity ;
-end ;
 //-------------------------------------------------------------------------------------------------------------------
 
 // Text Caculate : Value_OpenPositionProfit
-if(Value_CurrentPosition <> 0) then begin
-    Value_OpenPositionProfit = (i_OpenEquity - i_openpositionprofit) / bigpointvalue ;
+if(Value_CurrentPosition > 0) then begin
+    Value_OpenPositionProfit = (close - Value_AvgEntryPrice) * Value_CurrentPosition ;
+end else if(Value_CurrentPosition < 0) then begin
+    Value_OpenPositionProfit = (close - Value_AvgEntryPrice) * Value_CurrentPosition ;
 end else if(Value_CurrentPosition = 0) then begin
     Value_OpenPositionProfit = 0 ;
 end ;
