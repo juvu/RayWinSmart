@@ -37,7 +37,9 @@ if( Value_CurrentPosition = 0 ) then begin
     Value_StopWin_Active_Begin = 0 ;
 end ;
 
-if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point ) then begin
+if( Value_CurrentPosition <> 0 ) and ( absvalue(Close - Value_AvgEntryPrice) >= Define_StopWin_Protect_Active_Point )
+    and ( OpenPositionProfit > 0 )
+then begin
     Value_StopWin_Active_Begin = 1 ;
 end ;
 
