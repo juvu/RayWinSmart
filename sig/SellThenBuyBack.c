@@ -46,11 +46,11 @@ if( Strategy_ON_OFF = 1 ) then begin
 if(  Value_SellThenBuyBack_Begin = 1 ) then begin
     if( currentbar > (PosTradeExitBar(0, CurrentEntries - 1) + Define_SellThenBuyBack_After_K_Number) ) then begin
         if( Value_Initial_Value_CurrentPosition > 0 ) then begin
-            if (close > minlist(PosTradeEntryPrice(0, CurrentEntries - 1), PosTradeExitPrice(0, CurrentEntries - 1))) then
+            if (close > maxlist(PosTradeEntryPrice(0, CurrentEntries - 1), PosTradeExitPrice(0, CurrentEntries - 1))) then
                 buy (Define_SellThenBuyBuyBack_Position) contract next bar market ;
         end ;
         if( Value_Initial_Value_CurrentPosition < 0 ) then begin
-            if (close < maxlist(PosTradeEntryPrice(0, CurrentEntries - 1), PosTradeExitPrice(0, CurrentEntries - 1))) then
+            if (close < minlist(PosTradeEntryPrice(0, CurrentEntries - 1), PosTradeExitPrice(0, CurrentEntries - 1))) then
                 sellshort (Define_SellThenBuyBuyBack_Position) contract next bar market ;
         end ;
     end ;
