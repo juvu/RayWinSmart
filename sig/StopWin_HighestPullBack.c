@@ -52,15 +52,17 @@ if( Value_CurrentPosition[1] = 0 and Value_CurrentPosition <> 0 ) then begin
     Value_Initial_Value_CurrentPosition = absvalue(Value_CurrentPosition) ;
 end ;
 
-if( Value_Initial_Value_StopWin_HighestPullBackPrice <> Value_StopWin_HighestPullBackPrice ) then begin
-    if( Value_CurrentPosition > 0 ) and ( (OpenPositionProfit > 0) or (absvalue(Value_CurrentPosition) > Value_Initial_Value_CurrentPosition) ) then begin
+//if( Value_Initial_Value_StopWin_HighestPullBackPrice <> Value_StopWin_HighestPullBackPrice ) then begin
+//    if( Value_CurrentPosition > 0 ) and ( (OpenPositionProfit > 0) or (absvalue(Value_CurrentPosition) > Value_Initial_Value_CurrentPosition) ) then begin
+    if( Value_CurrentPosition > 0 ) then begin
         sell next bar IntPortion(Value_StopWin_HighestPullBackPrice) stop ;
     end ; // if( Value_CurrentPosition > 0 )
 
-    if( Value_CurrentPosition < 0 ) and ( (OpenPositionProfit > 0) or (absvalue(Value_CurrentPosition) > Value_Initial_Value_CurrentPosition) ) then begin
+//    if( Value_CurrentPosition < 0 ) and ( (OpenPositionProfit > 0) or (absvalue(Value_CurrentPosition) > Value_Initial_Value_CurrentPosition) ) then begin
+    if( Value_CurrentPosition < 0 ) then begin
         buytocover next bar IntPortion(Value_StopWin_HighestPullBackPrice) stop ;
     end ; // if( Value_CurrentPosition < 0 )
-end ;
+//end ;
 // Strategy End
 end ;
 //-------------------------------------------------------------------------------------------------------------------
